@@ -1,14 +1,14 @@
 import time, re
-def spellcheck(test):
+def spellcheck(check):
 
-	test = test.lower() #Makes everything lowercase
-	test = re.sub(r"[^\w\s]|[\b\d+\b]", " ", test) #Removes punctuation from text	
+	check = check.lower() #Makes everything lowercase
+	check = re.sub(r"[^\w\s]|[\b\d+\b]", " ", check) #Removes punctuation and numbers from text	
+	checklist = check.split() #Splits the words in the text into items of a list
+	print(checklist) #For testing purposes
 
-	testlist = test.split() #Splits the words in the text into items of a list
-	print(testlist)
-
-	f1 = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
-	words = f1.read()
+	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
+	words = f.read()
+	f.close() #Close the file as it is now not in use
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 
@@ -22,9 +22,11 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 			if prompt in set([0, 1, 2]):
 				break
 			else:
-				print("Please try again.")
+				print("\nPlease try again.")
+				time.sleep(0.5)
 		except ValueError:
-			print("Please try again.") 
+			print("\nPlease try again.")
+			time.sleep(0.5)
 	optionselect(prompt)
 
 def optionselect(option): #Prompts the user for either the sentence or file depending on the option chosen
@@ -38,10 +40,12 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 				filename = input("\nPlease enter the filename: ")
 				f = open(filename, "r") #Open the given file to read
 				file=f.read()
+				f.close() #Close the file as it is now not in use
 				break
 				#More input validation
 			except FileNotFoundError:
 				print("\nCannot find the file with filename " + filename + ".")
+				time.sleep(0.5)
 				#Another menu to either try again or return to start menu
 				while True:
 					try:
@@ -51,7 +55,8 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 						elif option == 2:
 							intialmenu()
 					except ValueError:
-						print("Please try again")
+						print("\nPlease try again")
+						time.sleep(0.5)
 		spellcheck(file)
 
 intialmenu() #Starts the program
