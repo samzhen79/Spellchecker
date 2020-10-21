@@ -10,18 +10,23 @@ def spellcheck(checkstring):
 	f.close() #Close the file as it is now not in use
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
-	wordcount = 0
+	#Assigning variables for statistics
+	totalwordcount = 0
+	correctwordcount = 0
+	incorrectwordcount = 0
 
 	for x in checklist: #Loops through each word of the list that we are spellchecking
 
 		if (x in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 			print(x + " is spelt incorrectly")
+			incorrectwordcount = incorrectwordcount + 1
 		else: 
 			print(x)
-			
-		wordcount = wordcount + 1 #Counter
+			correctwordcount = correctwordcount + 1
 
-	print(wordcount) #Wordcount
+		totalwordcount = totalwordcount + 1 #Counter
+
+	print("\nSummary:\nTotal number of words: " + str(totalwordcount) + "\nCorrectly spelt words: " + str(correctwordcount) + "\nIncorrectly spelt words: " + str(incorrectwordcount)) #Wordcount
 
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
