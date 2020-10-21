@@ -1,15 +1,27 @@
 import time, re
-def spellcheck(check):
+def spellcheck(checkstring):
 
-	check = check.lower() #Makes everything lowercase
-	check = re.sub(r"[^\w\s]|[\b\d+\b]", " ", check) #Removes punctuation and numbers from text	
-	checklist = check.split() #Splits the words in the text into items of a list
-	print(checklist) #For testing purposes
+	checkstring = checkstring.lower() #Makes everything lowercase
+	checkstring = re.sub(r"[^\w\s]|[\b\d+\b]", " ", checkstring) #Removes punctuation and numbers from text	
+	checklist = checkstring.split() #Splits the words in the text into items of a list
 
 	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
 	words = f.read()
 	f.close() #Close the file as it is now not in use
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
+
+	wordcount = 0
+
+	for x in checklist: #Loops through each word of the list that we are spellchecking
+
+		if (x in wordslist) == False: #Checks if the word is in the EnglishWords.txt
+			print(x + " is spelt incorrectly")
+		else: 
+			print(x)
+			
+		wordcount = wordcount + 1 #Counter
+
+	print(wordcount) #Wordcount
 
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
