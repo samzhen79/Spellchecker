@@ -2,15 +2,14 @@ import time, re
 def spellcheck(test):
 
 	test = test.lower() #Makes everything lowercase
-	test = re.sub(r"[^\w\s]", " ", test) #Removes punctuation from text	
-	test = re.sub(r"[\b\d+\b]", " ", test) #Removes numbers from the text
+	test = re.sub(r"[^\w\s]|[\b\d+\b]", " ", test) #Removes punctuation from text	
+
 	testlist = test.split() #Splits the words in the text into items of a list
 	print(testlist)
 
 	f1 = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
 	words = f1.read()
-	wordslist = words.splitlines()
-	print (wordslist)
+	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
