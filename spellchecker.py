@@ -4,8 +4,14 @@ def spellcheck(test):
 	test = test.lower() #Makes everything lowercase
 	test = re.sub(r"[^\w\s]", " ", test) #Removes punctuation from text	
 	test = re.sub(r"[\b\d+\b]", " ", test) #Removes numbers from the text
-	list = test.split() #Splits the words in the text into items of a list
-	print(list)
+	testlist = test.split() #Splits the words in the text into items of a list
+	print(testlist)
+
+	f1 = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
+	words = f1.read()
+	wordslist = words.splitlines()
+	print (wordslist)
+
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
 	print("\n1. Spellcheck a sentence \n2. Spellcheck a file \n0. Quit program")
@@ -31,7 +37,7 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 		while True:
 			try:
 				filename = input("\nPlease enter the filename: ")
-				f = open(filename, "r")
+				f = open(filename, "r") #Open the given file to read
 				file=f.read()
 				break
 				#More input validation
