@@ -7,7 +7,7 @@ def spellcheck(test):
 	list = test.split() #Splits the words in the text into items of a list
 	print(list)
 
-def intialmenu():
+def intialmenu(): #Starting menu to allow user to choose how they want to use the program
 	print("\n1. Spellcheck a sentence \n2. Spellcheck a file \n0. Quit program")
 
 	while True:
@@ -22,7 +22,7 @@ def intialmenu():
 			print("Please try again.") 
 	optionselect(prompt)
 
-def optionselect(option):
+def optionselect(option): #Prompts the user for either the sentence or file depending on the option chosen
 
 	if option == 1:
 		sentence = input("\nPlease enter your sentence: ")
@@ -49,4 +49,4 @@ def optionselect(option):
 						print("Please try again")
 		spellcheck(file)
 
-intialmenu()
+intialmenu() #Starts the program
