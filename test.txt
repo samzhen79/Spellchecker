@@ -1,0 +1,3 @@
+Hello world. This is a text file to help test my spellchecker.
+Here are some deliberatly mmispelt woords tht shoild be spllchgekd.
+Also need78 to madd some numbers and dates such as 1882 and  happy4.
