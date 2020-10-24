@@ -4,6 +4,7 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 
 	while True:
 		try:
+
 			print("\n 1. Spellcheck a sentence"\
 				"\n 2. Spellcheck a file" \
 				"\n 0. Quit program")
@@ -36,9 +37,7 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 		spellcheck(sentence)
 
 	elif option == 2:
-
 		while True:
-
 			try:
 
 				time.sleep(0.5)
@@ -55,7 +54,6 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 				time.sleep(0.5)
 				#Another menu to either try again or return to start menu
 				while True:
-
 					try:
 
 						option = int(input("\n1. To try another filename"\
@@ -63,7 +61,6 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 							"\nPlease enter an option by entering its corresponding number: "))
 
 						if option == 1:
-
 							break
 
 						elif option == 2:
@@ -100,11 +97,36 @@ def spellcheck(checkstring):
 	totalwordcount, correctwordcount, incorrectwordcount = 0, 0, 0
 
 	for x in checklist: #Loops through each word of the list that we are spellchecking
-
 		if (x in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 
 			print(x + " is spelt incorrectly")
-			incorrectwordcount = incorrectwordcount + 1
+
+			while True:
+				try:
+
+					print("\n 1. Ignore"\
+					"\n 2. Mark" \
+					"\n 3. Add to dictionary"\
+					"\n 4. Suggest likely correct spelling")
+					time.sleep(0.5)
+					prompt = int(input("\nPlease select an option by entering its corresponding number: "))
+
+					if prompt in set([1, 2, 3, 4]):
+
+						break
+
+					else:
+
+						time.sleep(0.5)
+						input("\nThis is not a valid option. Press enter to try again...")
+						time.sleep(0.5)
+
+
+				except ValueError:
+
+					time.sleep(0.5)
+					input("\nYou did not enter a number. Press enter to try again...")
+					time.sleep(0.5)
 
 		else: 
 
