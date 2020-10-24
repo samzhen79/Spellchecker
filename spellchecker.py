@@ -34,6 +34,8 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 	if option == 1:
 
 		sentence = input("\nPlease enter your sentence: ")
+
+		time.sleep(0.5)
 		spellcheck(sentence)
 
 	elif option == 2:
@@ -43,8 +45,9 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 				time.sleep(0.5)
 				filename = input("\nPlease enter the filename: ")
 				f = open(filename, "r") #Open the given file to read
-				file=f.read()
-				f.close() #Close the file as it is now not in use
+				file = f.read()
+				f.close()
+
 				break
 				#More input validation
 			except FileNotFoundError:
@@ -78,15 +81,22 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 						time.sleep(0.5)
 						input("\nYou did not enter a number. Press enter to try again...")
 						time.sleep(0.5)
+	time.sleep(0.5)
+	spellcheck(file)
+	#Rewrites the file with the marked words
+	global string
+	file = open(filename, "w")
+	file.write(string)
+	file.close()
 
-		time.sleep(0.5)
-		spellcheck(file)
 
 def spellcheck(checkstring):
 
-	checkstring = checkstring.lower() #Makes everything lowercase
-	checkstring = re.sub(r"[^\w\s]|[\b\d+\b]", " ", checkstring) #Removes punctuation and numbers from text	
-	checklist = checkstring.split() #Splits the words in the text into items of a list
+	global string #Will be used across functions
+	string = checkstring
+	cleanstring = checkstring.lower() #Makes everything lowercase
+	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", " ", cleanstring) #Removes punctuation and numbers from text	
+	checklist = cleanstring.split() #Splits the words in the text into items of a list
 
 	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
 	words = f.read()
@@ -94,14 +104,15 @@ def spellcheck(checkstring):
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 	#Assigning variables for statistics
+	global incorrectwordcount #incorrectwordcount will be used across functions
 	totalwordcount, correctwordcount, incorrectwordcount = 0, 0, 0
 
-	for x in checklist: #Loops through each word of the list that we are spellchecking
-		if (x in wordslist) == False: #Checks if the word is in the EnglishWords.txt
+	for word in checklist: #Loops through each word of the list that we are spellchecking
+		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 
-			print(x + " is spelt incorrectly")
+			print("\n" + word + " is spelt incorrectly")
 
-			while True:
+			while True: #This menu will show up when a mispelt word is found
 				try:
 
 					print("\n 1. Ignore"\
@@ -127,10 +138,11 @@ def spellcheck(checkstring):
 					time.sleep(0.5)
 					input("\nYou did not enter a number. Press enter to try again...")
 					time.sleep(0.5)
-
+			spellcheckOption(prompt, word)
 		else: 
 
-			print(x)
+			print(word) #Shows the checked word, this should always output a word which is correctly spelt
+
 			correctwordcount = correctwordcount + 1
 
 		totalwordcount = totalwordcount + 1 #Counter
@@ -139,6 +151,33 @@ def spellcheck(checkstring):
 		"\nTotal number of words: " + str(totalwordcount) + \
 		"\nCorrectly spelt words: " + str(correctwordcount) + \
 		"\nIncorrectly spelt words: " + str(incorrectwordcount)) #Wordcount
+
+
+def spellcheckOption(option, word):
+
+	global string, incorrectwordcount
+
+	if option == 1: #This will ignore the current word but increase the incorrect word count
+
+		incorrectwordcount =+ 1
+		return
+
+	elif option == 2: #This will replace the word with itself with question marks around it
+
+		string.replace(word, "?" + word + "?", 1) #Makes changes to the original string
+		incorrectwordcount =+ 1
+		return
+
+	elif option == 3: #This will add the word to the dictionary and also the list of english words so it does not get flagged again during the loop
+
+		f = open("EnglishWords.txt", "a") #Opens the file to add the word to the end
+		f.write("\n" + word)
+		f.close()
+		wordslist.append(word)
+		return
+
+	elif option == 4:
+		return
 
 
 intialmenu() #Starts the program
