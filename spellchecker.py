@@ -6,8 +6,8 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 	while True:
 		try:
 
-			print("\n 1. Spellcheck a sentence"\
-				"\n 2. Spellcheck a file" \
+			print("\n 1. Spellcheck a sentence"
+				"\n 2. Spellcheck a file" 
 				"\n 0. Quit program")
 			time.sleep(0.5)
 			prompt = int(input("\nPlease select an option by entering its corresponding number: "))
@@ -38,6 +38,9 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 		time.sleep(0.5)
 		spellcheck(sentence)
+		global string
+		print("Here is the processed sentence: \n" +
+			 string)
 
 	elif option == 2:
 		while True:
@@ -60,8 +63,8 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 				while True:
 					try:
 
-						option = int(input("\n1. To try another filename"\
-							"\n2. To return to initial menu"\
+						option = int(input("\n1. To try another filename"
+							"\n2. To return to initial menu"
 							"\nPlease enter an option by entering its corresponding number: "))
 
 						if option == 1:
@@ -82,13 +85,14 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 						time.sleep(0.5)
 						input("\nYou did not enter a number. Press enter to try again...")
 						time.sleep(0.5)
-	time.sleep(0.5)
-	spellcheck(file)
-	#Rewrites the file with the marked words
-	global string
-	file = open(filename, "w")
-	file.write(string)
-	file.close()
+
+		time.sleep(0.5)
+		spellcheck(file)
+		#Rewrites the file with the marked words
+		global string
+		file = open(filename, "w")
+		file.write(string)
+		file.close()
 
 
 def spellcheck(checkstring):
@@ -116,9 +120,9 @@ def spellcheck(checkstring):
 			while True: #This menu will show up when a mispelt word is found
 				try:
 
-					print("\n 1. Ignore"\
-					"\n 2. Mark" \
-					"\n 3. Add to dictionary"\
+					print("\n 1. Ignore"
+					"\n 2. Mark" 
+					"\n 3. Add to dictionary"
 					"\n 4. Suggest likely correct spelling")
 					time.sleep(0.5)
 					prompt = int(input("\nPlease select an option by entering its corresponding number: "))
@@ -149,11 +153,11 @@ def spellcheck(checkstring):
 		totalwordcount =+ 1 #Counter
 
 	print("\nSummary:"\
-		"\nTotal number of words: " + str(totalwordcount) + \
-		"\nCorrectly spelt words: " + str(correctwordcount) + \
-		"\nIncorrectly spelt words: " + str(incorrectwordcount) +\
-		"\nWords added to dictionary: " + str(addDictionary) +\
-		"\nWords replaced by suggestion: ") #Summary
+		"\nTotal number of words: " + str(totalwordcount) + 
+		"\nCorrectly spelt words: " + str(correctwordcount) + 
+		"\nIncorrectly spelt words: " + str(incorrectwordcount) +
+		"\nWords added to dictionary: " + str(addDictionary) +
+		"\nWords replaced by suggestion: " + str(suggestionCount)) #Summary
 
 
 def spellcheckOption(option, word):
@@ -198,7 +202,7 @@ def spellcheckOption(option, word):
 		while True: #Another menu, might have to make this into a function?
 			try:
 
-				print("\n 1. Use suggestion"\
+				print("\n 1. Use suggestion"
 					"\n 2. Reject suggestion")
 				time.sleep(0.5)
 				prompt = int(input("\nPlease select an option by entering its corresponding number: "))
