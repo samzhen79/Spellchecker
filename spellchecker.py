@@ -33,7 +33,7 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 
 def optionselect(option): #Prompts the user for either the sentence or file depending on the option chosen
 
-	global string
+	global string, summary
 
 	if option == 1:
 
@@ -41,8 +41,6 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 		time.sleep(0.5)
 		spellcheck(sentence)
-		print("Here is the processed sentence: \n" +\
-			 string)
 
 	elif option == 2:
 		while True:
@@ -88,12 +86,26 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 						input("\nYou did not enter a number. Press enter to try again...")
 						time.sleep(0.5)
 
-		time.sleep(0.5)
 		spellcheck(file)
-		#Rewrites the file with the marked words
-		file = open(filename, "w")
-		file.write(string)
-		file.close()
+
+	else:
+		return
+
+	while True:
+		try:
+
+			time.sleep(0.5)
+			filewrite = input("\nPlease enter a filename to create: ")
+			f = open(filewrite, "x") #Open the given file to read
+			f.write(summary + "\n" + string)
+			f.close()
+			break
+			#More input validation
+		except FileExistsError:
+
+			time.sleep(0.5)
+			input("\nA file with the name " + filename + " already exists. Press enter to try again...")
+			time.sleep(0.5)
 
 
 def spellcheck(checkstring):
@@ -147,7 +159,9 @@ def spellcheck(checkstring):
 					time.sleep(0.5)
 					input("\nYou did not enter a number. Press enter to try again...")
 					time.sleep(0.5)
+
 			spellcheckOption(prompt, word)
+
 		else: 
 
 			print(word) #Shows the checked word, this should always output a word which is correctly spelt
@@ -156,14 +170,16 @@ def spellcheck(checkstring):
 
 		totalwordcount =+ 1 #Counter
 
-	print("\nSummary:" + 
+	global summary
+	summary = ("Summary:" + 
 		"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S") +
-		"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + 
+		"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" + 
 		"\nTotal number of words: " + str(totalwordcount) + 
 		"\nCorrectly spelt words: " + str(correctwordcount) + 
 		"\nIncorrectly spelt words: " + str(incorrectwordcount) +
 		"\nWords added to dictionary: " + str(addDictionary) +
-		"\nWords replaced by suggestion: " + str(suggestionCount)) #Summary
+		"\nWords replaced by suggestion: " + str(suggestionCount) + 
+		"\n") #Summary
 
 
 def spellcheckOption(option, word):
@@ -177,7 +193,8 @@ def spellcheckOption(option, word):
 
 	elif option == 2: #This will replace the word with itself with question marks around it
 
-		string.replace(word, "?" + word + "?", 1) #Makes changes to the original string
+		string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
+		print(string)
 		incorrectwordcount =+ 1
 		return
 
@@ -228,16 +245,15 @@ def spellcheckOption(option, word):
 				time.sleep(0.5)
 				input("\nYou did not enter a number. Press enter to try again...")
 				time.sleep(0.5)
-			return
 
 		if prompt == 1: #Replaces the word with the suggestion
 
-			string.replace(word, suggestion, 1)
+			string = string.replace(word, suggestion, 1)
 			correctwordcount =+ 1
 			suggestionCount =+ 1
 
 		else:
-
+			string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
 			incorrectwordcount =+ 1
 
 
