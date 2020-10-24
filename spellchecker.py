@@ -1,4 +1,5 @@
 import time, re
+from difflib import SequenceMatcher
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
 
@@ -92,7 +93,7 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 def spellcheck(checkstring):
 
-	global string #Will be used across functions
+	global string, wordslist #Will be used across functions
 	string = checkstring
 	cleanstring = checkstring.lower() #Makes everything lowercase
 	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", " ", cleanstring) #Removes punctuation and numbers from text	
@@ -104,8 +105,8 @@ def spellcheck(checkstring):
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 	#Assigning variables for statistics
-	global incorrectwordcount, addDictionary#incorrectwordcount will be used across functions
-	totalwordcount, correctwordcount, incorrectwordcount = 0, 0, 0
+	global incorrectwordcount, addDictionary, correctwordcount, suggestionCount#incorrectwordcount will be used across functions
+	totalwordcount, correctwordcount, incorrectwordcount, addDictionary, suggestionCount = 0, 0, 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
@@ -151,12 +152,13 @@ def spellcheck(checkstring):
 		"\nTotal number of words: " + str(totalwordcount) + \
 		"\nCorrectly spelt words: " + str(correctwordcount) + \
 		"\nIncorrectly spelt words: " + str(incorrectwordcount) +\
-		"\nWords added to dictionary: " + str(addDictionary)) #Summary
+		"\nWords added to dictionary: " + str(addDictionary) +\
+		"\nWords replaced by suggestion: ") #Summary
 
 
 def spellcheckOption(option, word):
 
-	global string, incorrectwordcount, addDictionary
+	global string, incorrectwordcount, correctwordcount, addDictionary, suggestionCount	
 
 	if option == 1: #This will ignore the current word but increase the incorrect word count
 
@@ -178,8 +180,58 @@ def spellcheckOption(option, word):
 		addDictionary =+ 1
 		return
 
-	elif option == 4:
-		return
+	elif option == 4: #This will suggest a word to replace the mispelt word and gives the user and option to accept or reject the word
+
+		suggestionRatio = float(0)
+
+		#Loops through the list of english words and compares it with the mispelt word
+		for x in wordslist: 
+			test = SequenceMatcher(None, word, x).ratio()
+
+			if test >= suggestionRatio: #This replaces the suggestion everytime a word with a better ratio is found
+
+				suggestionRatio = test
+				suggestion = x
+
+		print("\nSuggestion: " + suggestion)
+
+		while True: #Another menu, might have to make this into a function?
+			try:
+
+				print("\n 1. Use suggestion"\
+					"\n 2. Reject suggestion")
+				time.sleep(0.5)
+				prompt = int(input("\nPlease select an option by entering its corresponding number: "))
+				#Input validation
+				if prompt in set([1, 2]):
+
+					break
+
+				else:
+
+					time.sleep(0.5)
+					input("\nThis is not a valid option. Press enter to try again...")
+					time.sleep(0.5)
+
+			except ValueError:
+
+				time.sleep(0.5)
+				input("\nYou did not enter a number. Press enter to try again...")
+				time.sleep(0.5)
+			return
+
+		if prompt == 1: #Replaces the word with the suggestion
+
+			string.replace(word, suggestion, 1)
+			correctwordcount =+ 1
+			suggestionCount =+ 1
+
+		else:
+
+			incorrectwordcount =+ 1
+
+
+
 
 
 intialmenu() #Starts the program
