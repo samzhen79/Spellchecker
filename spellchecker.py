@@ -1,4 +1,4 @@
-import time, re
+import time, re, datetime
 from difflib import SequenceMatcher
 string = ""
 
@@ -98,6 +98,9 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 def spellcheck(checkstring):
 
+	starttime=datetime.datetime.now()
+	startcounter = time.perf_counter()
+
 	global string, wordslist #Will be used across functions
 	string = checkstring
 	cleanstring = checkstring.lower() #Makes everything lowercase
@@ -153,7 +156,9 @@ def spellcheck(checkstring):
 
 		totalwordcount =+ 1 #Counter
 
-	print("\nSummary:"\
+	print("\nSummary:" + 
+		"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S") +
+		"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + 
 		"\nTotal number of words: " + str(totalwordcount) + 
 		"\nCorrectly spelt words: " + str(correctwordcount) + 
 		"\nIncorrectly spelt words: " + str(incorrectwordcount) +
