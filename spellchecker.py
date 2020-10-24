@@ -1,5 +1,6 @@
 import time, re
 from difflib import SequenceMatcher
+string = ""
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
 
@@ -32,14 +33,15 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 
 def optionselect(option): #Prompts the user for either the sentence or file depending on the option chosen
 
+	global string
+
 	if option == 1:
 
 		sentence = input("\nPlease enter your sentence: ")
 
 		time.sleep(0.5)
 		spellcheck(sentence)
-		global string
-		print("Here is the processed sentence: \n" +
+		print("Here is the processed sentence: \n" +\
 			 string)
 
 	elif option == 2:
@@ -89,7 +91,6 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 		time.sleep(0.5)
 		spellcheck(file)
 		#Rewrites the file with the marked words
-		global string
 		file = open(filename, "w")
 		file.write(string)
 		file.close()
