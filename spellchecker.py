@@ -2,12 +2,12 @@ import time, re
 
 def intialmenu(): #Starting menu to allow user to choose how they want to use the program
 
-	print("\n 1. Spellcheck a sentence"\
-		"\n 2. Spellcheck a file" \
-		"\n 0. Quit program")
-
 	while True:
 		try:
+			print("\n 1. Spellcheck a sentence"\
+				"\n 2. Spellcheck a file" \
+				"\n 0. Quit program")
+			time.sleep(0.5)
 			prompt = int(input("\nPlease select an option by entering its corresponding number: "))
 			#Input validation
 			if prompt in set([0, 1, 2]):
@@ -16,12 +16,14 @@ def intialmenu(): #Starting menu to allow user to choose how they want to use th
 
 			else:
 
-				print("\nPlease try again.")
+				time.sleep(0.5)
+				input("\nThis is not a valid option. Press enter to try again...")
 				time.sleep(0.5)
 
 		except ValueError:
 
-			print("\nPlease try again.")
+			time.sleep(0.5)
+			input("\nYou did not enter a number. Press enter to try again...")
 			time.sleep(0.5)
 
 	optionselect(prompt)
@@ -39,6 +41,7 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 			try:
 
+				time.sleep(0.5)
 				filename = input("\nPlease enter the filename: ")
 				f = open(filename, "r") #Open the given file to read
 				file=f.read()
@@ -47,6 +50,7 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 				#More input validation
 			except FileNotFoundError:
 
+				time.sleep(0.5)
 				print("\nCannot find the file with filename " + filename + ".")
 				time.sleep(0.5)
 				#Another menu to either try again or return to start menu
@@ -54,10 +58,9 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 					try:
 
-						option = int(input("\nEnter"\
-							"\n1. To try another filename"\
+						option = int(input("\n1. To try another filename"\
 							"\n2. To return to initial menu"\
-							"\n: "))
+							"\nPlease enter an option by entering its corresponding number: "))
 
 						if option == 1:
 
@@ -67,11 +70,19 @@ def optionselect(option): #Prompts the user for either the sentence or file depe
 
 							intialmenu()
 
+						else:
+
+							time.sleep(0.5)
+							input("\nThis is not a valid option. Press enter to try again...")
+							time.sleep(0.5)
+
 					except ValueError:
 
-						print("\nPlease try again")
+						time.sleep(0.5)
+						input("\nYou did not enter a number. Press enter to try again...")
 						time.sleep(0.5)
 
+		time.sleep(0.5)
 		spellcheck(file)
 
 def spellcheck(checkstring):
