@@ -104,7 +104,7 @@ def spellcheck(checkstring):
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 	#Assigning variables for statistics
-	global incorrectwordcount #incorrectwordcount will be used across functions
+	global incorrectwordcount, addDictionary#incorrectwordcount will be used across functions
 	totalwordcount, correctwordcount, incorrectwordcount = 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
@@ -143,19 +143,20 @@ def spellcheck(checkstring):
 
 			print(word) #Shows the checked word, this should always output a word which is correctly spelt
 
-			correctwordcount = correctwordcount + 1
+			correctwordcount =+ 1
 
-		totalwordcount = totalwordcount + 1 #Counter
+		totalwordcount =+ 1 #Counter
 
 	print("\nSummary:"\
 		"\nTotal number of words: " + str(totalwordcount) + \
 		"\nCorrectly spelt words: " + str(correctwordcount) + \
-		"\nIncorrectly spelt words: " + str(incorrectwordcount)) #Wordcount
+		"\nIncorrectly spelt words: " + str(incorrectwordcount) +\
+		"\nWords added to dictionary: " + str(addDictionary)) #Summary
 
 
 def spellcheckOption(option, word):
 
-	global string, incorrectwordcount
+	global string, incorrectwordcount, addDictionary
 
 	if option == 1: #This will ignore the current word but increase the incorrect word count
 
@@ -174,6 +175,7 @@ def spellcheckOption(option, word):
 		f.write("\n" + word)
 		f.close()
 		wordslist.append(word)
+		addDictionary =+ 1
 		return
 
 	elif option == 4:
