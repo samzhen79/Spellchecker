@@ -1,38 +1,37 @@
 import time, re, datetime
 from difflib import SequenceMatcher
-string = "" #Global variable
+string = ""
 
-def options (num):	#Alot of menus in this code, might aswell make a function for it. When given any a number of options, it will ensure a valid option is selected.
+def initialmenu(): #Starting menu to allow user to choose how they want to use the program
 
 	while True:
 		try:
 
-			prompt = int(input("\nPlease choose an option by entering its corresponding number: "))
+			print("\n 1. Spellcheck a sentence"
+				"\n 2. Spellcheck a file" 
+				"\n 0. Quit program")
+			time.sleep(0.5)
+			prompt = int(input("\nPlease select an option by entering its corresponding number: "))
+			#Input validation
+			if prompt in set([0, 1, 2]):
 
-			if prompt in set (num): #If prompt is part of the given options then it will return the value of the chosen option
+				break
 
-				return(prompt)
-			
-			else: #If any integer that is not a valid option is inputted
+			else:
 
 				time.sleep(0.5)
 				input("\nThis is not a valid option. Press enter to try again...")
 				time.sleep(0.5)
 
-		except ValueError: #If any none integer is inputted
+		except ValueError:
 
 			time.sleep(0.5)
 			input("\nYou did not enter a number. Press enter to try again...")
 			time.sleep(0.5)
 
-def initialmenu(): #Starting menu to allow user to choose how they want to use the program
+	optionselect(prompt)
 
-	print("\n 1. Spellcheck a sentence"
-		"\n 2. Spellcheck a file" 
-		"\n 0. Quit program")
-	time.sleep(0.5)
-
-	option = options({1, 2, 0})
+def optionselect(option): #Prompts the user for either the sentence or file depending on the option chosen
 
 	global string, summary
 
@@ -58,22 +57,34 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			except FileNotFoundError:
 
 				time.sleep(0.5)
-				print("\nCannot find the file with filename " + filename + ".\n")
+				print("\nCannot find the file with filename " + filename + ".")
 				time.sleep(0.5)
 				#Another menu to either try again or return to start menu
+				while True:
+					try:
 
-				print("\n1. To try another filename"
-					"\n2. To return to initial menu")
+						option = int(input("\n1. To try another filename"
+							"\n2. To return to initial menu"
+							"\nPlease enter an option by entering its corresponding number: "))
 
-				option = options(1, 2)
+						if option == 1:
+							break
 
-				if option == 1:
+						elif option == 2:
 
-					break
+							initialmenu()
 
-				elif option == 2:
+						else:
 
-					initialmenu()
+							time.sleep(0.5)
+							input("\nThis is not a valid option. Press enter to try again...")
+							time.sleep(0.5)
+
+					except ValueError:
+
+						time.sleep(0.5)
+						input("\nYou did not enter a number. Press enter to try again...")
+						time.sleep(0.5)
 
 		spellcheck(file)
 
@@ -96,12 +107,31 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			input("\nA file with the name " + filename + " already exists. Press enter to try again...")
 			time.sleep(0.5)
 
-	print("\n 1. Return to starting menu" 
-		"\n 0. Quit program")
+	while True:
+		try:
 
-	option = options({1, 0})
+			print("\n 1. Return to starting menu" 
+				"\n 0. Quit program")
+			time.sleep(0.5)
+			prompt = int(input("\nPlease select an option by entering its corresponding number: "))
+			#Input validation
+			if prompt in set([0, 1, ]):
 
-	if option == 1:
+				break
+
+			else:
+
+				time.sleep(0.5)
+				input("\nThis is not a valid option. Press enter to try again...")
+				time.sleep(0.5)
+
+		except ValueError:
+
+			time.sleep(0.5)
+			input("\nYou did not enter a number. Press enter to try again...")
+			time.sleep(0.5)
+
+	if prompt == 1:
 
 		initialmenu()
 
@@ -109,15 +139,18 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 		return
 
+
+
+
 def spellcheck(checkstring):
 
 	starttime=datetime.datetime.now()
 	startcounter = time.perf_counter()
 
-	global string #Will be used across functions
+	global string, wordslist #Will be used across functions
 	string = checkstring
 	cleanstring = checkstring.lower() #Makes everything lowercase
-	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", "", cleanstring) #Removes punctuation and numbers from text	
+	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", " ", cleanstring) #Removes punctuation and numbers from text	
 	checklist = cleanstring.split() #Splits the words in the text into items of a list
 
 	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
@@ -126,81 +159,50 @@ def spellcheck(checkstring):
 	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
 
 	#Assigning variables for statistics
-
+	global incorrectwordcount, addDictionary, correctwordcount, suggestionCount#incorrectwordcount will be used across functions
 	totalwordcount, correctwordcount, incorrectwordcount, addDictionary, suggestionCount = 0, 0, 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 
 			print("\n" + word + " is spelt incorrectly")
-			time.sleep(0.5)
 
-			print("\n 1. Ignore"
-			"\n 2. Mark" 
-			"\n 3. Add to dictionary"
-			"\n 4. Suggest likely correct spelling")
-			time.sleep(0.5)
+			while True: #This menu will show up when a mispelt word is found
+				try:
 
-			option = options({1, 2, 3, 4})
+					print("\n 1. Ignore"
+					"\n 2. Mark" 
+					"\n 3. Add to dictionary"
+					"\n 4. Suggest likely correct spelling")
+					time.sleep(0.5)
+					prompt = int(input("\nPlease select an option by entering its corresponding number: "))
 
-			if option == 1: #This will ignore the current word but increase the incorrect word count
+					if prompt in set([1, 2, 3, 4]):
 
-				incorrectwordcount += 1
+						break
 
-			elif option == 2: #This will replace the word with itself with question marks around it
+					else:
 
-				string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
-				incorrectwordcount += 1
-			
+						time.sleep(0.5)
+						input("\nThis is not a valid option. Press enter to try again...")
+						time.sleep(0.5)
 
-			elif option == 3: #This will add the word to the dictionary and also the list of english words so it does not get flagged again during the loop
 
-				f = open("EnglishWords.txt", "a") #Opens the file to add the word to the end
-				f.write("\n" + word)
-				f.close()
-				wordslist.append(word)
-				addDictionary += 1
-			
+				except ValueError:
 
-			elif option == 4: #This will suggest a word to replace the mispelt word and gives the user and option to accept or reject the word
+					time.sleep(0.5)
+					input("\nYou did not enter a number. Press enter to try again...")
+					time.sleep(0.5)
 
-				suggestionRatio = float(0)
-
-				#Loops through the list of english words and compares it with the mispelt word
-				for x in wordslist: 
-					test = SequenceMatcher(None, word, x).ratio()
-
-					if test >= suggestionRatio: #This replaces the suggestion everytime a word with a better ratio is found
-
-						suggestionRatio = test
-						suggestion = x
-
-				print("\nSuggestion: " + suggestion)
-				time.sleep(0.5)
-
-				print("\n 1. Use suggestion"
-					"\n 2. Reject suggestion")
-				time.sleep(0.5)
-
-				option = options({1, 2})
-
-				if option == 1: #Replaces the word with the suggestion
-
-					string = string.replace(word, suggestion, 1)
-					correctwordcount += 1
-					suggestionCount += 1
-
-				else:
-					string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
-					incorrectwordcount += 1
+			spellcheckOption(prompt, word)
 
 		else: 
 
 			print(word) #Shows the checked word, this should always output a word which is correctly spelt
 
-			correctwordcount += 1
+			correctwordcount =+ 1
 
-		totalwordcount += 1 #Counter
+		totalwordcount =+ 1 #Counter
 
 	global summary
 	summary = ("Summary:" + 
@@ -213,4 +215,83 @@ def spellcheck(checkstring):
 		"\nWords replaced by suggestion: " + str(suggestionCount) + 
 		"\n") #Summary
 
-initialmenu()
+
+def spellcheckOption(option, word):
+
+	global string, incorrectwordcount, correctwordcount, addDictionary, suggestionCount	
+
+	if option == 1: #This will ignore the current word but increase the incorrect word count
+
+		incorrectwordcount =+ 1
+		return
+
+	elif option == 2: #This will replace the word with itself with question marks around it
+
+		string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
+		print(string)
+		incorrectwordcount =+ 1
+		return
+
+	elif option == 3: #This will add the word to the dictionary and also the list of english words so it does not get flagged again during the loop
+
+		f = open("EnglishWords.txt", "a") #Opens the file to add the word to the end
+		f.write("\n" + word)
+		f.close()
+		wordslist.append(word)
+		addDictionary =+ 1
+		return
+
+	elif option == 4: #This will suggest a word to replace the mispelt word and gives the user and option to accept or reject the word
+
+		suggestionRatio = float(0)
+
+		#Loops through the list of english words and compares it with the mispelt word
+		for x in wordslist: 
+			test = SequenceMatcher(None, word, x).ratio()
+
+			if test >= suggestionRatio: #This replaces the suggestion everytime a word with a better ratio is found
+
+				suggestionRatio = test
+				suggestion = x
+
+		print("\nSuggestion: " + suggestion)
+
+		while True: #Another menu, might have to make this into a function?
+			try:
+
+				print("\n 1. Use suggestion"
+					"\n 2. Reject suggestion")
+				time.sleep(0.5)
+				prompt = int(input("\nPlease select an option by entering its corresponding number: "))
+				#Input validation
+				if prompt in set([1, 2]):
+
+					break
+
+				else:
+
+					time.sleep(0.5)
+					input("\nThis is not a valid option. Press enter to try again...")
+					time.sleep(0.5)
+
+			except ValueError:
+
+				time.sleep(0.5)
+				input("\nYou did not enter a number. Press enter to try again...")
+				time.sleep(0.5)
+
+		if prompt == 1: #Replaces the word with the suggestion
+
+			string = string.replace(word, suggestion, 1)
+			correctwordcount =+ 1
+			suggestionCount =+ 1
+
+		else:
+			string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
+			incorrectwordcount =+ 1
+
+
+
+
+
+intialmenu() #Starts the program
