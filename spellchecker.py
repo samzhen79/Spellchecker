@@ -86,7 +86,11 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			time.sleep(0.5)
 			filewrite = input("\nPlease enter a filename to create: ")
 			f = open(filewrite, "x") #Open the given file to read
-			f.write(summary + "\n" + string)
+			loglist = string.split()
+			logstring = ""
+			for word in loglist:
+				logstring = (logstring + "\n" + word)
+			f.write(summary + logstring)
 			f.close()
 			break
 			#More input validation
@@ -115,10 +119,10 @@ def spellcheck(checkstring):
 	startcounter = time.perf_counter()
 
 	global string #Will be used across functions
-	string = checkstring
 	cleanstring = checkstring.lower() #Makes everything lowercase
 	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", "", cleanstring) #Removes punctuation and numbers from text	
 	checklist = cleanstring.split() #Splits the words in the text into items of a list
+	string = cleanstring #Will be used for the new file after spellcheck
 
 	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
 	words = f.read()
@@ -130,6 +134,7 @@ def spellcheck(checkstring):
 	totalwordcount, correctwordcount, incorrectwordcount, addDictionary, suggestionCount = 0, 0, 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
+		time.sleep(0.20)
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 
 			print("\n" + word + " is spelt incorrectly")
@@ -196,7 +201,7 @@ def spellcheck(checkstring):
 
 		else: 
 
-			print(word) #Shows the checked word, this should always output a word which is correctly spelt
+			print("\n" + word) #Shows the checked word, this should always output a word which is correctly spelt
 
 			correctwordcount += 1
 
