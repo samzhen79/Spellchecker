@@ -1,36 +1,56 @@
-import time, re, datetime
+import time, re, datetime, sys
 from difflib import SequenceMatcher
-string = "" #Global variable
+string = ""
 
 def options (num):	#Alot of menus in this code, might aswell make a function for it. When given any a number of options, it will ensure a valid option is selected.
 
 	while True:
 		try:
 
-			prompt = int(input("\nPlease choose an option by entering its corresponding number: "))
+			#This set of code effectively replaces the previous line, to the user this means the terminal stays in the same place.
+			sys.stdout.write('\x1b[1A')
+			sys.stdout.write('\x1b[2K')
+
+			prompt = int(input("Please choose an option by entering its corresponding number: "))
 
 			if prompt in set (num): #If prompt is part of the given options then it will return the value of the chosen option
+
+				#This set of prints clears the terminal 
+				print(chr(27)+'[2j')
+				print('\033c')
+				print('\x1bc')
 
 				return(prompt)
 			
 			else: #If any integer that is not a valid option is inputted
 
 				time.sleep(0.5)
-				input("\nThis is not a valid option. Press enter to try again...")
+				sys.stdout.write('\x1b[1A')
+				sys.stdout.write('\x1b[2K')
+				input("This is not a valid option. Press enter to try again...")
 				time.sleep(0.5)
 
 		except ValueError: #If any none integer is inputted
 
 			time.sleep(0.5)
-			input("\nYou did not enter a number. Press enter to try again...")
+			sys.stdout.write('\x1b[1A')
+			sys.stdout.write('\x1b[2K')
+			input("You did not enter a number. Press enter to try again...")
 			time.sleep(0.5)
 
 def initialmenu(): #Starting menu to allow user to choose how they want to use the program
+	
+	print(chr(27)+'[2j')
+	print('\033c')
+	print('\x1bc')
+	
+	print("\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557"
+		"\n\u2551 Spellchecker \u2551"
+		"\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d")
 
 	print("\n 1. Spellcheck a sentence"
 		"\n 2. Spellcheck a file" 
-		"\n 0. Quit program")
-	time.sleep(0.5)
+		"\n 0. Quit program\n\n")
 
 	option = options({1, 2, 0})
 
@@ -38,7 +58,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 	if option == 1:
 
-		sentence = input("\nPlease enter your sentence: ")
+		sentence = input("Please enter your sentence: ")
 
 		time.sleep(0.5)
 		spellcheck(sentence)
@@ -47,25 +67,24 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 		while True:
 			try:
 
-				time.sleep(0.5)
+
 				filename = input("\nPlease enter the filename: ")
 				f = open(filename, "r") #Open the given file to read
 				file = f.read()
 				f.close()
 
 				break
-				#More input validation
+			
 			except FileNotFoundError:
 
 				time.sleep(0.5)
+
 				print("\nCannot find the file with filename " + filename + ".\n")
-				time.sleep(0.5)
-				#Another menu to either try again or return to start menu
 
 				print("\n1. To try another filename"
-					"\n2. To return to initial menu")
+					"\n2. To return to initial menu\n\n")
 
-				option = options(1, 2)
+				option = options({1, 2})
 
 				if option == 1:
 
@@ -85,15 +104,17 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 			time.sleep(0.5)
 			filewrite = input("\nPlease enter a filename to create: ")
-			f = open(filewrite, "x") #Open the given file to read
+			f = open(filewrite, "x")
 			loglist = string.split()
 			logstring = ""
-			for word in loglist:
+
+			for word in loglist: #This formats the text file as a long list of words
 				logstring = (logstring + "\n" + word)
+
 			f.write(summary + logstring)
 			f.close()
 			break
-			#More input validation
+			
 		except FileExistsError:
 
 			time.sleep(0.5)
@@ -101,7 +122,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			time.sleep(0.5)
 
 	print("\n 1. Return to starting menu" 
-		"\n 0. Quit program")
+		"\n 0. Quit program\n\n")
 
 	option = options({1, 0})
 
@@ -125,26 +146,27 @@ def spellcheck(checkstring):
 	string = cleanstring #Will be used for the new file after spellcheck
 
 	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
-	words = f.read()
-	f.close() #Close the file as it is now not in use
-	wordslist = words.splitlines() #Splits the words in the file by line into items of a list
+	wordslist = (f.read()).splitlines() #Splits the words in the file by line into items of a list
+	f.close()
 
 	#Assigning variables for statistics
 
 	totalwordcount, correctwordcount, incorrectwordcount, addDictionary, suggestionCount = 0, 0, 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
-		time.sleep(0.20)
+		time.sleep(0.3)
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
 
-			print("\n" + word + " is spelt incorrectly")
+			sys.stdout.write('\x1b[1A')
+			sys.stdout.write('\x1b[2K')
+
+			print(word + " is spelt incorrectly")
 			time.sleep(0.5)
 
 			print("\n 1. Ignore"
 			"\n 2. Mark" 
 			"\n 3. Add to dictionary"
-			"\n 4. Suggest likely correct spelling")
-			time.sleep(0.5)
+			"\n 4. Suggest likely correct spelling\n\n")
 
 			option = options({1, 2, 3, 4})
 
@@ -184,7 +206,7 @@ def spellcheck(checkstring):
 				time.sleep(0.5)
 
 				print("\n 1. Use suggestion"
-					"\n 2. Reject suggestion")
+					"\n 2. Reject suggestion\n\n")
 				time.sleep(0.5)
 
 				option = options({1, 2})
@@ -201,11 +223,13 @@ def spellcheck(checkstring):
 
 		else: 
 
-			print("\n" + word) #Shows the checked word, this should always output a word which is correctly spelt
+			sys.stdout.write('\x1b[1A')
+			sys.stdout.write('\x1b[2K')
+			print(word) #Shows the checked word, this should always output a word which is correctly spelt
 
 			correctwordcount += 1
 
-		totalwordcount += 1 #Counter
+		totalwordcount += 1 
 
 	global summary
 	summary = ("Summary:" + 
