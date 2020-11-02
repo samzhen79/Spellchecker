@@ -44,9 +44,9 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 	print('\033c')
 	print('\x1bc')
 	
-	print("\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557"
+	print("\n\u2554"+"\u2550"*14+"\u2557"
 		"\n\u2551 Spellchecker \u2551"
-		"\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d")
+		"\n\u255a"+"\u2550"*14+"\u255d")
 
 	print("\n 1. Spellcheck a sentence"
 		"\n 2. Spellcheck a file" 
