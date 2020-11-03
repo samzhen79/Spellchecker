@@ -36,6 +36,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 	
 	sys.stdout.write('\x1bc')
 	
+	#Nice looking title + border thing.
 	print("\n\u2554"+"\u2550"*14+"\u2557"
 		"\n\u2551 Spellchecker \u2551"
 		"\n\u255a"+"\u2550"*14+"\u255d")
@@ -59,7 +60,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 
 				filename = input("\nPlease enter the filename: ")
-				f = open(filename, "r") #Open the given file to read
+				f = open(filename, "r") 
 				file = f.read()
 				f.close()
 
@@ -95,7 +96,8 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			time.sleep(0.5)
 			filewrite = input("\nPlease enter a filename to create: ")
 			f = open(filewrite, "x")
-			loglist = string.split()
+			loglist = string.split() #Technically don't need to do this as we could instead return a list from the spellcheck function,
+									 #But this retains the previous functionality of the code if I wanted to change it back in the future.
 			logstring = ""
 
 			for word in loglist: #This formats the text file as a long list of words
@@ -128,14 +130,14 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 def spellcheck(checkstring):
 
-	starttime = datetime.datetime.now()
-	startcounter = time.perf_counter()
+	starttime = datetime.datetime.now() #Gets the current date and time.
+	startcounter = time.perf_counter() #Gets the current counter value. This will be used later to find the total elapsed time in seconds.
 
 	cleanstring = re.sub(r"[^\w\s]|[\b\d+\b]", "", checkstring.lower()) #Removes punctuation and numbers from text. Also makes everything lowercase.
 	checklist = cleanstring.split() #Splits the words in the text into items of a list
 	string = cleanstring #Will be used for the new file after spellcheck
 
-	f = open("EnglishWords.txt", "r") #Open EnglishWords.txt to read, this will be used to check spelling.
+	f = open("EnglishWords.txt", "r")
 	wordslist = (f.read()).splitlines() #Splits the words in the file by line into items of a list
 	f.close()
 
@@ -145,7 +147,7 @@ def spellcheck(checkstring):
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
 		time.sleep(0.3)
-		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt
+		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt list
 
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
@@ -165,16 +167,16 @@ def spellcheck(checkstring):
 
 			elif option == 2: #This will replace the word with itself with question marks around it
 
-				string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
+				string = string.replace(word, "?" + word + "?", 1) #Adds question marks around the word in the string
 				incorrectwordcount += 1
 			
 
 			elif option == 3: #This will add the word to the dictionary and also the list of english words so it does not get flagged again during the loop
 
-				f = open("EnglishWords.txt", "a") #Opens the file to add the word to the end
-				f.write("\n" + word)
+				f = open("EnglishWords.txt", "a")
+				f.write("\n" + word) #Adds the word to the end of the dictionary
 				f.close()
-				wordslist.append(word)
+				wordslist.append(word)#Also updates the list we are currently checking against
 				addDictionary += 1
 			
 
@@ -200,14 +202,15 @@ def spellcheck(checkstring):
 
 				option = options({1, 2})
 
-				if option == 1: #Replaces the word with the suggestion
+				if option == 1: #Replace the word with the suggestion
 
 					string = string.replace(word, suggestion, 1)
 					correctwordcount += 1
 					suggestionCount += 1
 
-				else:
-					string = string.replace(word, "?" + word + "?", 1) #Adds question marks to the word in the string
+				else: #Mark as incorrect, with the question marks
+
+					string = string.replace(word, "?" + word + "?", 1)
 					incorrectwordcount += 1
 
 			print("\n") #Keeps the checking line on the same line of the terminal by repositioning it.
@@ -229,7 +232,7 @@ def spellcheck(checkstring):
 		"\nIncorrectly spelt words: " + str(incorrectwordcount) +
 		"\nWords added to dictionary: " + str(addDictionary) +
 		"\nWords replaced by suggestion: " + str(suggestionCount) + 
-		"\n") #Summary
+		"\n")
 
 	return(string, summary)
 
