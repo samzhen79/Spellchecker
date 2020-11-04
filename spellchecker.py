@@ -1,9 +1,9 @@
-import time, re, datetime, sys
+import time, re, datetime, sys, os
 from difflib import SequenceMatcher
 
 def title(text="Spellchecker"): #Produces a title for the terminal. 
 
-	sys.stdout.write('\x1bc') #Clears the terminal
+	os.system('cls' if os.name == 'nt' else 'clear') #Clears the terminal, This also enables VT100 escape sequences for Windows 10 (I am not sure if this a bug with python)
 
 	border(text, "title")
 
@@ -71,7 +71,7 @@ def optionsmenu (options, num, menutext=""):	#Prints out the available options, 
 			time.sleep(0.5)
 
 def initialmenu(): #Starting menu to allow user to choose how they want to use the program
-
+	
 	option = optionsmenu(["1. Spellcheck a sentence", "2. Spellcheck a file", "0. Quit program"], [1,2,0])
 
 	if option == 1:
@@ -140,14 +140,13 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			input(" A file with the name " + filewrite + " already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
-	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0})
+	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0}, "File created")
 
 	if option == 1:
 
 		initialmenu()
 
 	else:
-
 		return
 
 def spellcheck(checkstring):
@@ -230,7 +229,7 @@ def spellcheck(checkstring):
 					incorrectwordcount += 1
 
 		else:
-			
+
 			correctwordcount += 1
 
 		totalwordcount += 1 
@@ -248,4 +247,4 @@ def spellcheck(checkstring):
 	return(string, summary)
 
 initialmenu()
-sys.stdout.write('\x1bc')
+os.system('cls' if os.name == 'nt' else 'clear')
