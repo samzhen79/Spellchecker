@@ -19,6 +19,15 @@ def border(text, style="default"): #Puts a border around given text, also have d
 			"\n\u2502 Checking: \u2502 " + text + " \u2502"
 			"\n\u2514"+"\u2500"*11+"\u2534"+"\u2500"*(len(text)+2)+"\u2518")
 
+	elif style == "options": #Dashed border for a set of options
+		print("")
+		for option in text:
+
+			print(" "+"\u254c"*25+
+				"\n "+option)
+
+		print(" "+"\u254c"*25+"\n\n")
+
 	else: #Default case. Default single line border.
 		print("\n\u250c"+"\u2500"*(len(text)+2)+"\u2510"
 			"\n\u2502 " + text + " \u2502"
@@ -58,13 +67,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 	
 	title()
 
-	print("\n "+"\u254c"*25+
-		"\n 1. Spellcheck a sentence"
-		"\n "+"\u254c"*25+
-		"\n 2. Spellcheck a file" 
-		"\n "+"\u254c"*25+
-		"\n 0. Quit program"
-		"\n "+"\u254c"*25+"\n\n")
+	border(["1. Spellcheck a sentence", "2. Spellcheck a file", "0. Quit program"], "options")
 
 	option = options({1, 2, 0})
 
@@ -92,13 +95,8 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 				time.sleep(0.5)
 
 				title()
-				border("Cannot find the file with file name " + "\x1b[41m"+filename+"\x1b[0m.")
-
-				print("\n "+"\u254c"*25+
-					"\n 1. Try another file name"
-					"\n "+"\u254c"*25+
-					"\n 2. Return to menu"
-					"\n "+"\u254c"*25+"\n\n")
+				border("Cannot find file with the name " +filename+".")
+				border(["1. Try another file name", "2. Return to menu"], "options")
 
 				option = options({1, 2})
 
@@ -143,11 +141,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			input(" A file with the name " + filewrite + " already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
-	print("\n "+"\u254c"*25+
-		"\n 1. Return to starting menu" 
-		"\n "+"\u254c"*25+
-		"\n 0. Quit program"
-		"\n "+"\u254c"*25+"\n\n")
+	border(["1. Return to starting menu", "0. Quit program"], "options")
 
 	option = options({1, 0})
 
@@ -191,15 +185,7 @@ def spellcheck(checkstring):
 			title()
 			border(word + " is spelt incorrectly")
 
-			print("\n "+"\u254c"*25+
-				"\n 1. Ignore"
-				"\n "+"\u254c"*25+
-				"\n 2. Mark" 
-				"\n "+"\u254c"*25+
-				"\n 3. Add to dictionary"
-				"\n "+"\u254c"*25+
-				"\n 4. Suggest a word"
-				"\n "+"\u254c"*25+"\n\n")
+			border(["1. Ignore", "2. Mark", "3. Add to dictionary", "4. Suggest a word"], "options")
 
 			option = options({1, 2, 3, 4})
 
@@ -241,11 +227,7 @@ def spellcheck(checkstring):
 				title()
 				border("Suggestion: "+suggestion)
 
-				print("\n "+"\u254c"*25+
-					"\n 1. Use suggestion"
-					"\n "+"\u254c"*25+
-					"\n 2. Reject suggestion"
-					"\n "+"\u254c"*25+"\n\n")
+				border(["1. Use suggestion", "2. Reject suggestion"], "options")
 
 				option = options({1, 2})
 
@@ -266,13 +248,13 @@ def spellcheck(checkstring):
 		totalwordcount += 1 
 
 	summary = ("Summary:" + 
-			"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S") +
-			"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" + 
-			"\nTotal number of words: " + str(totalwordcount) + 
-			"\nCorrectly spelt words: " + str(correctwordcount) + 
-			"\nIncorrectly spelt words: " + str(incorrectwordcount) +
-			"\nWords added to dictionary: " + str(addDictionary) +
-			"\nWords replaced by suggestion: " + str(suggestionCount) + 
+			"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S")+
+			"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" +
+			"\nTotal number of words: " + str(totalwordcount)+
+			"\nCorrectly spelt words: " + str(correctwordcount)+
+			"\nIncorrectly spelt words: " + str(incorrectwordcount)+
+			"\nWords added to dictionary: " + str(addDictionary)+
+			"\nWords replaced by suggestion: " + str(suggestionCount)+2+
 			"\n")
 
 	return(string, summary)
