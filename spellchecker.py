@@ -31,7 +31,7 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 
 				time.sleep(0.5)
 				sys.stdout.write('\x1b[1A'+'\x1b[2K')
-				input(" This is not a one of the options. Press \x1b[41mENTER\x1b[0m to try again... ")
+				input(" This is not a one of the options. Press \x1b[41mENTER\x1b[0m to try again... ") #\x1b[41m \x1b[0m Colours the text with a red background
 				time.sleep(0.5)
 
 		except ValueError: #If any none integer is inputted
@@ -176,7 +176,7 @@ def spellcheck(checkstring):
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
 
-		sys.stdout.write('\x1b[3A'+'\x1b[0J')
+		sys.stdout.write('\x1b[3A'+'\x1b[0J') #Clears the last three lines
 
 		#Shows the word that is currently being checked
 		print("\u250c"+"\u2500"*11+"\u252c"+"\u2500"*(len(word)+2)+"\u2510"
