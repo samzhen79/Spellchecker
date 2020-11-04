@@ -1,12 +1,28 @@
 import time, re, datetime, sys
 from difflib import SequenceMatcher
 
-def title():
+def title(text="Spellchecker"): #Produces a title for the terminal. 
 
-	#Nice looking title + border thing.
-	print("\n\u2554"+"\u2550"*14+"\u2557"
-	"\n\u2551 Spellchecker \u2551"
-	"\n\u255a"+"\u2550"*14+"\u255d")
+	sys.stdout.write('\x1bc') #Clears the terminal
+
+	border(text, "title")
+
+def border(text, style="default"): #Puts a border around given text, also have different style options
+
+	if style == "title": #Title style border. Double line border.
+		print("\n\u2554"+"\u2550"*(len(text)+2)+"\u2557"
+			"\n\u2551 " + text + " \u2551"
+			"\n\u255a"+"\u2550"*(len(text)+2)+"\u255d")
+
+	elif style == "check": #Border for spellchecking. Has a nice little separation between checking and the word.
+		print("\n\u250c"+"\u2500"*11+"\u252c"+"\u2500"*(len(text)+2)+"\u2510"
+			"\n\u2502 Checking: \u2502 " + text + " \u2502"
+			"\n\u2514"+"\u2500"*11+"\u2534"+"\u2500"*(len(text)+2)+"\u2518")
+
+	else: #Default case. Default single line border.
+		print("\n\u250c"+"\u2500"*(len(text)+2)+"\u2510"
+			"\n\u2502 " + text + " \u2502"
+			"\n\u2514"+"\u2500"*(len(text)+2)+"\u2518")
 
 def options (num):	#Alot of menus in this code, might aswell make a function for it. When given any a number of options, it will ensure a valid option is selected.
 
@@ -19,9 +35,6 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 			prompt = int(input(" Please choose an option by entering its corresponding number: "))
 
 			if prompt in set (num): #If prompt is part of the given options then it will return the value of the chosen option
-
-				#This clears the terminal 
-				sys.stdout.write('\x1bc')
 
 				title()
 
@@ -42,9 +55,6 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 			time.sleep(0.5)
 
 def initialmenu(): #Starting menu to allow user to choose how they want to use the program
-	
-	sys.stdout.write('\x1bc')
-	
 	
 	title()
 
@@ -81,11 +91,8 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 				time.sleep(0.5)
 
-				sys.stdout.write('\x1b[1A'+'\x1b[2K')
-
-				print("\u250c"+"\u2500"*(39+len(filename))+"\u2510"
-					"\n\u2502 Cannot find the file with file name " + "\x1b[41m"+filename+"\x1b[0m" + ". \u2502"
-					"\n\u2514"+"\u2500"*(39+len(filename))+"\u2518")
+				title()
+				border("Cannot find the file with file name " + "\x1b[41m"+filename+"\x1b[0m.")
 
 				print("\n "+"\u254c"*25+
 					"\n 1. Try another file name"
@@ -112,12 +119,9 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 		try:
 
 			time.sleep(0.5)
-			sys.stdout.write('\x1bc')
 			title()
-			filewrite = input("\n\u250c"+"\u2500"*22+"\u2510"
-							"\n\u2502 Spellcheck Complete. \u2502"
-							"\n\u2514"+"\u2500"*22+"\u2518"
-							"\n\n Please enter a filename to create: ")
+			border("Spellcheck Complete.")
+			filewrite = input("\n Please enter a filename to create: ")
 
 			f = open(filewrite, "x")
 			loglist = string.split() #Technically don't need to do this as we could instead return a list from the spellcheck function,
@@ -168,7 +172,7 @@ def spellcheck(checkstring):
 	wordslist = (f.read()).splitlines() #Splits the words in the file by line into items of a list
 	f.close()
 
-	print("\n")
+	title()
 
 	#Assigning variables for statistics
 
@@ -176,21 +180,16 @@ def spellcheck(checkstring):
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
 
-		sys.stdout.write('\x1b[3A'+'\x1b[0J') #Clears the last three lines
-
 		#Shows the word that is currently being checked
-		print("\u250c"+"\u2500"*11+"\u252c"+"\u2500"*(len(word)+2)+"\u2510"
-			"\n\u2502 Checking: \u2502 " + word + " \u2502"
-			"\n\u2514"+"\u2500"*11+"\u2534"+"\u2500"*(len(word)+2)+"\u2518")
+		border(word, "check")
+
+		sys.stdout.write('\x1b[4A'+'\x1b[0J') #Removes the last 4 lines. Could use title() instead but this may be less taxing
 
 		time.sleep(0.3)
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt list
 
-			sys.stdout.write('\x1b[3A'+'\x1b[0J')
-
-			print("\u250c"+"\u2500"*(23+len(word))+"\u2510"
-				"\n\u2502 " + word + " is spelt incorrectly \u2502"
-				"\n\u2514"+"\u2500"*(23+len(word))+"\u2518")
+			title()
+			border(word + " is spelt incorrectly")
 
 			print("\n "+"\u254c"*25+
 				"\n 1. Ignore"
@@ -226,7 +225,7 @@ def spellcheck(checkstring):
 			elif option == 4: #This will suggest a word to replace the mispelt word and gives the user and option to accept or reject the word
 
 				suggestionRatio = float(0)
-				print("\nLoading...")
+				border("Loading...")
 				#Loops through the list of english words and compares it with the mispelt word, absolutely not the most efficient method
 				for x in wordslist: 
 
@@ -239,7 +238,8 @@ def spellcheck(checkstring):
 
 				sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-				print(" Suggestion: " + suggestion)
+				title()
+				border("Suggestion: "+suggestion)
 
 				print("\n "+"\u254c"*25+
 					"\n 1. Use suggestion"
@@ -260,21 +260,20 @@ def spellcheck(checkstring):
 					string = string.replace(word, "?" + word + "?", 1)
 					incorrectwordcount += 1
 
-			print("\n") #Keeps the checking line on the same line of the terminal by repositioning it.
-
-			correctwordcount += 1
+			else:
+				correctwordcount += 1
 
 		totalwordcount += 1 
 
 	summary = ("Summary:" + 
-		"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S") +
-		"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" + 
-		"\nTotal number of words: " + str(totalwordcount) + 
-		"\nCorrectly spelt words: " + str(correctwordcount) + 
-		"\nIncorrectly spelt words: " + str(incorrectwordcount) +
-		"\nWords added to dictionary: " + str(addDictionary) +
-		"\nWords replaced by suggestion: " + str(suggestionCount) + 
-		"\n")
+			"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S") +
+			"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" + 
+			"\nTotal number of words: " + str(totalwordcount) + 
+			"\nCorrectly spelt words: " + str(correctwordcount) + 
+			"\nIncorrectly spelt words: " + str(incorrectwordcount) +
+			"\nWords added to dictionary: " + str(addDictionary) +
+			"\nWords replaced by suggestion: " + str(suggestionCount) + 
+			"\n")
 
 	return(string, summary)
 
