@@ -1,6 +1,13 @@
 import time, re, datetime, sys
 from difflib import SequenceMatcher
 
+def title():
+
+	#Nice looking title + border thing.
+	print("\n\u2554"+"\u2550"*14+"\u2557"
+	"\n\u2551 Spellchecker \u2551"
+	"\n\u255a"+"\u2550"*14+"\u255d")
+
 def options (num):	#Alot of menus in this code, might aswell make a function for it. When given any a number of options, it will ensure a valid option is selected.
 
 	while True:
@@ -9,12 +16,14 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 			#This effectively replaces the previous line, to the user this means the terminal stays in the same place.
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-			prompt = int(input("Please choose an option by entering its corresponding number: "))
+			prompt = int(input(" Please choose an option by entering its corresponding number: "))
 
 			if prompt in set (num): #If prompt is part of the given options then it will return the value of the chosen option
 
 				#This clears the terminal 
 				sys.stdout.write('\x1bc')
+
+				title()
 
 				return(prompt)
 			
@@ -22,34 +31,36 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 
 				time.sleep(0.5)
 				sys.stdout.write('\x1b[1A'+'\x1b[2K')
-				input("This is not a valid option. Press enter to try again...")
+				input(" This is not a one of the options. Press \x1b[41mENTER\x1b[0m to try again... ")
 				time.sleep(0.5)
 
 		except ValueError: #If any none integer is inputted
 
 			time.sleep(0.5)
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
-			input("You did not enter a number. Press enter to try again...")
+			input(" You did not enter an integer. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
 def initialmenu(): #Starting menu to allow user to choose how they want to use the program
 	
 	sys.stdout.write('\x1bc')
 	
-	#Nice looking title + border thing.
-	print("\n\u2554"+"\u2550"*14+"\u2557"
-		"\n\u2551 Spellchecker \u2551"
-		"\n\u255a"+"\u2550"*14+"\u255d")
+	
+	title()
 
-	print("\n 1. Spellcheck a sentence"
+	print("\n "+"\u254c"*25+
+		"\n 1. Spellcheck a sentence"
+		"\n "+"\u254c"*25+
 		"\n 2. Spellcheck a file" 
-		"\n 0. Quit program\n\n")
+		"\n "+"\u254c"*25+
+		"\n 0. Quit program"
+		"\n "+"\u254c"*25+"\n\n")
 
 	option = options({1, 2, 0})
 
 	if option == 1:
 
-		sentence = input("Please enter your sentence: ")
+		sentence = input("\n Please enter your sentence: ")
 
 		time.sleep(0.5)
 		string, summary = spellcheck(sentence)
@@ -59,7 +70,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			try:
 
 
-				filename = input("\nPlease enter the filename: ")
+				filename = input("\n Please enter the filename: ")
 				f = open(filename, "r") 
 				file = f.read()
 				f.close()
@@ -70,10 +81,17 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 				time.sleep(0.5)
 
-				print("\nCannot find the file with filename " + filename + ".\n")
+				sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-				print("\n1. To try another filename"
-					"\n2. To return to initial menu\n\n")
+				print("\u250c"+"\u2500"*(39+len(filename))+"\u2510"
+					"\n\u2502 Cannot find the file with file name " + "\x1b[41m"+filename+"\x1b[0m" + ". \u2502"
+					"\n\u2514"+"\u2500"*(39+len(filename))+"\u2518")
+
+				print("\n "+"\u254c"*25+
+					"\n 1. Try another file name"
+					"\n "+"\u254c"*25+
+					"\n 2. Return to menu"
+					"\n "+"\u254c"*25+"\n\n")
 
 				option = options({1, 2})
 
@@ -94,7 +112,13 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 		try:
 
 			time.sleep(0.5)
-			filewrite = input("\nPlease enter a filename to create: ")
+			sys.stdout.write('\x1bc')
+			title()
+			filewrite = input("\n\u250c"+"\u2500"*22+"\u2510"
+							"\n\u2502 Spellcheck Complete. \u2502"
+							"\n\u2514"+"\u2500"*22+"\u2518"
+							"\n\n Please enter a filename to create: ")
+
 			f = open(filewrite, "x")
 			loglist = string.split() #Technically don't need to do this as we could instead return a list from the spellcheck function,
 									 #But this retains the previous functionality of the code if I wanted to change it back in the future.
@@ -109,14 +133,17 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			
 		except FileExistsError:
 
+			sys.stdout.write('\x1b[1A'+'\x1b[2K')
+
 			time.sleep(0.5)
-			input("\nA file with the name " + filename + " already exists. Press enter to try again...")
+			input(" A file with the name " + filewrite + " already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
-	sys.stdout.write('\x1bc')
-
-	print("\n 1. Return to starting menu" 
-		"\n 0. Quit program\n\n")
+	print("\n "+"\u254c"*25+
+		"\n 1. Return to starting menu" 
+		"\n "+"\u254c"*25+
+		"\n 0. Quit program"
+		"\n "+"\u254c"*25+"\n\n")
 
 	option = options({1, 0})
 
@@ -141,23 +168,39 @@ def spellcheck(checkstring):
 	wordslist = (f.read()).splitlines() #Splits the words in the file by line into items of a list
 	f.close()
 
+	print("\n")
+
 	#Assigning variables for statistics
 
 	totalwordcount, correctwordcount, incorrectwordcount, addDictionary, suggestionCount = 0, 0, 0, 0, 0
 
 	for word in checklist: #Loops through each word of the list that we are spellchecking
+
+		sys.stdout.write('\x1b[3A'+'\x1b[0J')
+
+		#Shows the word that is currently being checked
+		print("\u250c"+"\u2500"*11+"\u252c"+"\u2500"*(len(word)+2)+"\u2510"
+			"\n\u2502 Checking: \u2502 " + word + " \u2502"
+			"\n\u2514"+"\u2500"*11+"\u2534"+"\u2500"*(len(word)+2)+"\u2518")
+
 		time.sleep(0.3)
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt list
 
-			sys.stdout.write('\x1b[1A'+'\x1b[2K')
+			sys.stdout.write('\x1b[3A'+'\x1b[0J')
 
-			print(word + " is spelt incorrectly")
-			time.sleep(0.5)
+			print("\u250c"+"\u2500"*(23+len(word))+"\u2510"
+				"\n\u2502 " + word + " is spelt incorrectly \u2502"
+				"\n\u2514"+"\u2500"*(23+len(word))+"\u2518")
 
-			print("\n 1. Ignore"
-			"\n 2. Mark" 
-			"\n 3. Add to dictionary"
-			"\n 4. Suggest likely correct spelling\n\n")
+			print("\n "+"\u254c"*25+
+				"\n 1. Ignore"
+				"\n "+"\u254c"*25+
+				"\n 2. Mark" 
+				"\n "+"\u254c"*25+
+				"\n 3. Add to dictionary"
+				"\n "+"\u254c"*25+
+				"\n 4. Suggest a word"
+				"\n "+"\u254c"*25+"\n\n")
 
 			option = options({1, 2, 3, 4})
 
@@ -183,9 +226,10 @@ def spellcheck(checkstring):
 			elif option == 4: #This will suggest a word to replace the mispelt word and gives the user and option to accept or reject the word
 
 				suggestionRatio = float(0)
-
-				#Loops through the list of english words and compares it with the mispelt word
+				print("\nLoading...")
+				#Loops through the list of english words and compares it with the mispelt word, absolutely not the most efficient method
 				for x in wordslist: 
+
 					test = SequenceMatcher(None, word, x).ratio()
 
 					if test >= suggestionRatio: #This replaces the suggestion everytime a word with a better ratio is found
@@ -193,12 +237,15 @@ def spellcheck(checkstring):
 						suggestionRatio = test
 						suggestion = x
 
-				print("\nSuggestion: " + suggestion)
-				time.sleep(0.5)
+				sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-				print("\n 1. Use suggestion"
-					"\n 2. Reject suggestion\n\n")
-				time.sleep(0.5)
+				print(" Suggestion: " + suggestion)
+
+				print("\n "+"\u254c"*25+
+					"\n 1. Use suggestion"
+					"\n "+"\u254c"*25+
+					"\n 2. Reject suggestion"
+					"\n "+"\u254c"*25+"\n\n")
 
 				option = options({1, 2})
 
@@ -214,11 +261,6 @@ def spellcheck(checkstring):
 					incorrectwordcount += 1
 
 			print("\n") #Keeps the checking line on the same line of the terminal by repositioning it.
-
-		else: 
-
-			sys.stdout.write('\x1b[1A'+'\x1b[2K')
-			print("Checking: " + word) #Shows the checked word, this should always output a word which is correctly spelt
 
 			correctwordcount += 1
 
