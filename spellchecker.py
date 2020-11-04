@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 
 def title(text="Spellchecker"): #Produces a title for the terminal. 
 
-	os.system('cls' if os.name == 'nt' else 'clear') #Clears the terminal, This also enables VT100 escape sequences for Windows 10 (I am not sure if this a bug with python)
+	os.system('cls' if os.name == 'nt' else 'clear') #Clears the terminal, This also enables VT100 escape sequences for Windows 10 (This may be a bug with os.system)
 
 	border(text, "title")
 
@@ -95,6 +95,10 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			
 			except FileNotFoundError:
 
+				sys.stdout.write('\x1b[1A'+'\x1b[2K')
+				
+				time.sleep(0.5)
+				input(" A file with the name \x1b[41m" + filename + "\x1b[0m does not exist. Press \x1b[41mENTER\x1b[0m to continue...")
 				time.sleep(0.5)
 
 				option = optionsmenu(["1. Try another file name", "2. Return to menu"], {1,2})
@@ -137,7 +141,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
 			time.sleep(0.5)
-			input(" A file with the name " + filewrite + " already exists. Press \x1b[41mENTER\x1b[0m to try again...")
+			input(" A file with the name \x1b[41m" + filewrite + "\x1b[0m already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
 	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0}, "File created")
