@@ -7,7 +7,7 @@ def title(text="Spellchecker"): #Produces a title for the terminal.
 
 	border(text, "title")
 
-def border(text, style="default"): #Puts a border around given text, also have different style options
+def border(text, style="default"): #Puts a border around given text, also has different style options
 
 	if style == "title": #Title style border. Double line border.
 		print("\n\u2554"+"\u2550"*(len(text)+2)+"\u2557"
@@ -33,7 +33,14 @@ def border(text, style="default"): #Puts a border around given text, also have d
 			"\n\u2502 " + text + " \u2502"
 			"\n\u2514"+"\u2500"*(len(text)+2)+"\u2518")
 
-def options (num):	#Alot of menus in this code, might aswell make a function for it. When given any a number of options, it will ensure a valid option is selected.
+def optionsmenu (options, num, menutext=""):	#Prints out the available options, also validates the options.
+	
+	title()
+
+	if menutext != "": #For any text above the list of options
+		border(menutext)
+
+	border(options, "options")
 
 	while True:
 		try:
@@ -53,7 +60,7 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 
 				time.sleep(0.5)
 				sys.stdout.write('\x1b[1A'+'\x1b[2K')
-				input(" This is not a one of the options. Press \x1b[41mENTER\x1b[0m to try again... ") #\x1b[41m \x1b[0m Colours the text with a red background
+				input(" This is not one of the options. Press \x1b[41mENTER\x1b[0m to try again... ") #\x1b[41m \x1b[0m Colours the text with a red background
 				time.sleep(0.5)
 
 		except ValueError: #If any none integer is inputted
@@ -64,12 +71,8 @@ def options (num):	#Alot of menus in this code, might aswell make a function for
 			time.sleep(0.5)
 
 def initialmenu(): #Starting menu to allow user to choose how they want to use the program
-	
-	title()
 
-	border(["1. Spellcheck a sentence", "2. Spellcheck a file", "0. Quit program"], "options")
-
-	option = options({1, 2, 0})
+	option = optionsmenu(["1. Spellcheck a sentence", "2. Spellcheck a file", "0. Quit program"], [1,2,0])
 
 	if option == 1:
 
@@ -94,11 +97,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 				time.sleep(0.5)
 
-				title()
-				border("Cannot find file with the name " +filename+".")
-				border(["1. Try another file name", "2. Return to menu"], "options")
-
-				option = options({1, 2})
+				option = optionsmenu(["1. Try another file name", "2. Return to menu"], {1,2})
 
 				if option == 1:
 
@@ -141,9 +140,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			input(" A file with the name " + filewrite + " already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
-	border(["1. Return to starting menu", "0. Quit program"], "options")
-
-	option = options({1, 0})
+	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0})
 
 	if option == 1:
 
@@ -182,12 +179,7 @@ def spellcheck(checkstring):
 		time.sleep(0.3)
 		if (word in wordslist) == False: #Checks if the word is in the EnglishWords.txt list
 
-			title()
-			border(word + " is spelt incorrectly")
-
-			border(["1. Ignore", "2. Mark", "3. Add to dictionary", "4. Suggest a word"], "options")
-
-			option = options({1, 2, 3, 4})
+			option = optionsmenu(["1. Ignore", "2. Mark", "3. Add to dictionary", "4. Suggest a word"], {1, 2, 3, 4}, word + " is spelt incorrectly")
 
 			if option == 1: #This will ignore the current word but increase the incorrect word count
 
@@ -224,12 +216,7 @@ def spellcheck(checkstring):
 
 				sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-				title()
-				border("Suggestion: "+suggestion)
-
-				border(["1. Use suggestion", "2. Reject suggestion"], "options")
-
-				option = options({1, 2})
+				option = optionsmenu(["1. Use suggestion", "2. Reject suggestion"], {1, 2}, "Suggestion: " + suggestion)
 
 				if option == 1: #Replace the word with the suggestion
 
@@ -242,21 +229,23 @@ def spellcheck(checkstring):
 					string = string.replace(word, "?" + word + "?", 1)
 					incorrectwordcount += 1
 
-			else:
-				correctwordcount += 1
+		else:
+			
+			correctwordcount += 1
 
 		totalwordcount += 1 
 
-	summary = ("Summary:" + 
+	summary = ("Summary:" +
 			"\nDate and time of spellcheck: " + starttime.strftime("D%d-M%m-Y%Y H%H:M%M:S%S")+
 			"\nSeconds elapsed during spellcheck: " + str(round((time.perf_counter() - startcounter),1)) + "s" +
 			"\nTotal number of words: " + str(totalwordcount)+
 			"\nCorrectly spelt words: " + str(correctwordcount)+
 			"\nIncorrectly spelt words: " + str(incorrectwordcount)+
 			"\nWords added to dictionary: " + str(addDictionary)+
-			"\nWords replaced by suggestion: " + str(suggestionCount)+2+
+			"\nWords replaced by suggestion: " + str(suggestionCount)+
 			"\n")
 
 	return(string, summary)
 
 initialmenu()
+sys.stdout.write('\x1bc')
