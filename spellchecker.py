@@ -76,6 +76,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 	if option == 1:
 
+		border("Spellcheck a sentence")
 		sentence = input("\n Please enter your sentence: ")
 
 		time.sleep(0.5)
@@ -85,7 +86,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 		while True:
 			try:
 
-
+				border("Spellcheck a file")
 				filename = input("\n Please enter the filename: ")
 				f = open(filename, "r") 
 				file = f.read()
@@ -134,7 +135,7 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			f.write(summary + logstring)
 			f.close()
 			break
-			
+
 		except FileExistsError:
 
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
@@ -143,13 +144,20 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 			input(" A file with the name \x1b[41m" + filewrite + "\x1b[0m already exists. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
-		except ValueError:
+		except (ValueError, PermissionError, OSError): #Windows does not allow certain characters or filenames. e.g. "con", /, ? etc.
 
 			sys.stdout.write('\x1b[1A'+'\x1b[2K')
 
-			time.sleep(0.5)
-			input(" Cannot use \x1b[41m" + filewrite + "\x1b[0m as a file name. Press \x1b[41mENTER\x1b[0m to try again...")
-			time.sleep(0.5)
+			if filewrite == "":
+
+				time.sleep(0.5)
+				input(" No input detected. Press \x1b[41mENTER\x1b[0m to try again...")
+				time.sleep(0.5)
+
+			else:
+				time.sleep(0.5)
+				input(" Cannot use \x1b[41m" + filewrite + "\x1b[0m as a file name. Press \x1b[41mENTER\x1b[0m to try again...")
+				time.sleep(0.5)
 
 	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0}, "File created")
 
