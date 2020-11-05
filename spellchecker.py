@@ -119,7 +119,6 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 	while True:
 		try:
 
-			time.sleep(0.5)
 			title()
 			border("Spellcheck Complete.")
 			filewrite = input("\n Please enter a filename to create: ")
@@ -142,6 +141,14 @@ def initialmenu(): #Starting menu to allow user to choose how they want to use t
 
 			time.sleep(0.5)
 			input(" A file with the name \x1b[41m" + filewrite + "\x1b[0m already exists. Press \x1b[41mENTER\x1b[0m to try again...")
+			time.sleep(0.5)
+
+		except ValueError:
+
+			sys.stdout.write('\x1b[1A'+'\x1b[2K')
+
+			time.sleep(0.5)
+			input(" Cannot use \x1b[41m" + filewrite + "\x1b[0m as a file name. Press \x1b[41mENTER\x1b[0m to try again...")
 			time.sleep(0.5)
 
 	option = optionsmenu(["1. Return to starting menu", "0. Quit program"], {1, 0}, "File created")
