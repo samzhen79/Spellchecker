@@ -174,6 +174,7 @@ def initialmenu():
 		return
 
 def spellcheck(checkstring):
+	"""Spellchecks the given string, returns the string post processing and a summary"""
 
 	starttime = datetime.datetime.now() #Gets the current system date and time.
 	startcounter = time.perf_counter() #Gets the current counter value. This will be used later to find the total elapsed time in seconds.
