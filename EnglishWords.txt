@@ -84091,3 +84091,4 @@ zygotes
 zygotic
 zymology
 zymurgy
+spellchecker
