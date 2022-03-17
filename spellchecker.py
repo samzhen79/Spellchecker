@@ -110,7 +110,7 @@ def initialmenu():
 
 				if option == 1:
 
-					break
+					continue
 
 				elif option == 2:
 
